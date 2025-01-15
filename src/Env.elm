@@ -6,3 +6,5 @@ module Env exposing (..)
 
 dummyConfigItem =
     ""
+
+mode = "asd"

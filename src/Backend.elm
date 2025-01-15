@@ -3,7 +3,6 @@ module Backend exposing (..)
 import Lamdera exposing (ClientId, SessionId)
 import Types exposing (..)
 
-
 app =
     Lamdera.backend
         { init = init
