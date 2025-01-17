@@ -8,6 +8,8 @@ import Url exposing (Url)
 type alias FrontendModel =
     { key : Key
     , message : String
+    , user : Maybe UserData
+    , preferences : Maybe Preferences
     }
 
 
@@ -20,6 +22,7 @@ type FrontendMsg
     = UrlClicked UrlRequest
     | UrlChanged Url
     | NoOpFrontendMsg
+    | BatchComplete (Result Error (List ResourceData))
 
 
 type ToBackend
@@ -32,3 +35,27 @@ type BackendMsg
 
 type ToFrontend
     = NoOpToFrontend
+
+
+type alias UserData =
+    { id : String
+    , name : String
+    }
+
+
+type alias Preferences =
+    { theme : String
+    , notifications : Bool
+    }
+
+
+type ResourceData
+    = UserResource UserData
+    | PreferencesResource Preferences
+
+
+
+
+type Error
+    = HttpError String
+    | UnknownError

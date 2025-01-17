@@ -216,7 +216,7 @@ asTask encoder decoder requestValue endpoint =
                                         )
                             )
 
-                _ ->
+                Env.Production ->
                     Http.bytesResolver <|
                         customResolver
                             (\metadata bytes ->

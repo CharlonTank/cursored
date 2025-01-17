@@ -1,4 +1,4 @@
-module RPCc exposing (..)
+module RPC exposing (..)
 
 import Dict
 import Http

@@ -7,6 +7,8 @@ import Html.Attributes as Attr
 import Lamdera
 import Types exposing (..)
 import Url
+import Task
+import Debug
 
 
 app =
@@ -25,6 +27,8 @@ init : Url.Url -> Nav.Key -> ( FrontendModel, Cmd FrontendMsg )
 init url key =
     ( { key = key
       , message = "Welcome to Lamdera! You're looking at the auto-generated base implementation. Check out src/Frontend.elm to start coding!"
+      , user = Nothing
+      , preferences = Nothing
       }
     , Cmd.none
     )
@@ -51,6 +55,23 @@ update msg model =
         NoOpFrontendMsg ->
             ( model, Cmd.none )
 
+        BatchComplete (Ok resources) ->
+            case resources of
+                [UserResource userData, PreferencesResource prefs] ->
+                    -- Now you have both with their proper types
+                    ( { model 
+                      | user = Just userData
+                      , preferences = Just prefs 
+                      }
+                    , Cmd.none
+                    )
+                _ -> 
+                    Debug.todo "Unexpected response shape"
+                    -- Handle unexpected response shape
+
+        BatchComplete (Err error) ->
+            -- Handle error
+            ( model, Cmd.none )
 
 updateFromBackend : ToFrontend -> FrontendModel -> ( FrontendModel, Cmd FrontendMsg )
 updateFromBackend msg model =
@@ -73,3 +94,22 @@ view model =
             ]
         ]
     }
+
+
+fetchBothItems : Cmd FrontendMsg
+fetchBothItems =
+    Task.sequence
+        [ fetchUser |> Task.map UserResource
+        , fetchPreferences |> Task.map PreferencesResource
+        ]
+        |> Task.attempt BatchComplete
+
+
+fetchPreferences : Task.Task Error Preferences
+fetchPreferences =
+    Debug.todo "TODO"
+
+
+fetchUser : Task.Task Error UserData
+fetchUser =
+    Debug.todo "TODO"
